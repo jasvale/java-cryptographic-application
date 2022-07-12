@@ -10,7 +10,7 @@ public class ChannelFactory {
     public static IChannel getChannel(
         ChannelContext channelContext
     ) throws Exception {
-        switch (channelType) {
+        switch (channelContext.channelType()) {
             case SECURED_SHARED_KEYS -> {
                 return new SecuredChannelSharedKeys(channelContext);
             }

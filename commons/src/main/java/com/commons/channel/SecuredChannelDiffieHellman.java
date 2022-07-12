@@ -20,23 +20,23 @@ public class SecuredChannelDiffieHellman extends Channel {
     private GenericCipher genericCipher;
     private Key macKey;
 
-    public SecuredChannelDiffieHellman(ChannelContext channelContext) throws Exception {
-        super(channelContext);
+    public SecuredChannelDiffieHellman(ChannelContext channelCtx) throws Exception {
+        super(channelCtx);
         IChannel unsecuredChannel = ChannelFactory.getChannel(ChannelType.UNSECURED, socket, EndPoint.SERVER);
 
         DHKeyAgreement diffieHellman;
-        if(channelContext.isRemoteAServer()) {
-            diffieHellman = new DHKeyAgreementInitiator(unsecuredChannel);
+        if(channelCtx.endPoint().equals(EndPoint.SERVER)) {
+            diffieHellman = new DHKeyAgreementReceiver(unsecuredChannel);
         }
         else {
-            diffieHellman = new DHKeyAgreementReceiver(unsecuredChannel);
+            diffieHellman = new DHKeyAgreementInitiator(unsecuredChannel);
         }
 
         Triplet<byte[], byte[], byte[]> derivedKeys = diffieHellman.exchangeAndDeriveKeys(
-                channelContext.getPublicCertificate(), channelContext.getSignerCertificate(), channelContext.getPrivateKey()
+                channelCtx.publicCertificate(), channelCtx.signerCertificate(), channelCtx.privateKey()
         );
 
-        this.secureChanel(channelContext.getCipherType(), derivedKeys.first, derivedKeys.second, derivedKeys.third);
+        this.secureChanel(channelCtx.cipherType(), derivedKeys.first, derivedKeys.second, derivedKeys.third);
     }
 
     public void secureChanel(CipherType cipherType, byte[] macKey, byte[] cipherKey, byte[] IVKey) throws Exception {

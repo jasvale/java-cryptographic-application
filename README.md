@@ -19,7 +19,7 @@ Only Symmetric Encryption is allows in communications.
 
 Two flavours are implemented:
 - Using a shared key. 
-- Diffie-Hellman Key Agreement. 
+- Diffie-Hellman Key Agreement with STS protocol. 
 
 Both will end deriving the keys needed for securing the Symmetric Communication Channel.
 

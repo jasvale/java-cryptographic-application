@@ -129,15 +129,17 @@ public class Client {
 		String serverAddress = "127.0.0.1";
 		serverSocket = new Socket(serverAddress, 4444);
 
-		ChannelContext channelContext = new ChannelContext();
-		channelContext.setChannelType(this.channelType);
-		channelContext.setCipherType(this.cipherType);
-		channelContext.setSocket(this.serverSocket);
-		channelContext.setRemoteEndPoint(EndPoint.SERVER);
-		channelContext.setPublicCertificate(CERTUtils.loadPublicX509(Paths.certs +"client.pem"));
-		channelContext.setSignerCertificate(CERTUtils.loadPublicX509(Paths.certsIntermediate +"intermediate.pem"));
-		channelContext.setPrivateKey(CERTUtils.loadRSAPrivateKey(Paths.certs +"client_pK.pkcs8"));
+		ChannelContext channelCtx = ChannelContext
+				.builder()
+				.channelType(channelType)
+				.cipherType(cipherType)
+				.socket(serverSocket)
+				.endPoint(EndPoint.SERVER)
+				.publicCertificate(CERTUtils.loadPublicX509(Paths.certs +"client.pem"))
+				.signerCertificate(CERTUtils.loadPublicX509(Paths.certsIntermediate +"intermediate.pem"))
+				.privateKey(CERTUtils.loadRSAPrivateKey(Paths.certs +"client_pK.pkcs8"))
+				.build();
 
-		this.channel = ChannelFactory.getChannel(channelContext);
+		this.channel = ChannelFactory.getChannel(channelCtx);
 	}
 }

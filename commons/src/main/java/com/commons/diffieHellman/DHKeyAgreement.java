@@ -1,13 +1,11 @@
 package com.commons.diffieHellman;
 
-import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.*;
 
 import javax.crypto.*;
-import javax.crypto.spec.*;
 
 import com.commons.channel.IChannel;
 import com.commons.generics.Triplet;

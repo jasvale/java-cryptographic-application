@@ -18,8 +18,8 @@ public abstract class Channel implements IChannel {
 	}
 
 	public Channel(ChannelContext channelContext) {
-		this.socket = channelContext.getSocket();
-		this.endPoint = channelContext.getRemoteEndPoint();
+		this.socket = channelContext.socket();
+		this.endPoint = channelContext.endPoint();
 	}
 
 	protected void flushOutMessageBytes(DataOutputStream out, byte[] bytes) throws IOException {

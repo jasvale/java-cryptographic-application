@@ -18,12 +18,12 @@ public class SecuredChannelSharedKeys extends Channel {
     private GenericCipher genericCipher;
     private Key macKey;
     public SecuredChannelSharedKeys(
-        ChannelContext channelContext
+        ChannelContext channelCtx
     ) throws Exception {
-        super(channelContext);
-        byte[] secretKey = CipherUtils.getSharedKey(channelContext.getCipherType());
+        super(channelCtx);
+        byte[] secretKey = CipherUtils.getSharedKey(channelCtx.cipherType());
         Triplet<byte[], byte[], byte[]> triplet = Utils.generateDerivedKeysFromSecretKey(secretKey);
-        this.secureChanel(channelContext.getCipherType(), triplet.first, triplet.second, triplet.third);
+        this.secureChanel(channelCtx.cipherType(), triplet.first, triplet.second, triplet.third);
     }
 
     public void secureChanel(CipherType cipherType, byte[] macKey, byte[] cipherKey, byte[] IVKey) throws Exception {

@@ -41,16 +41,18 @@ public class RequestHandler extends Thread {
 
         Console.show("new connection with client# " + clientNumber + " at " + socket);
 
-        ChannelContext channelContext = new ChannelContext();
-        channelContext.setCipherType(cipherType);
-        channelContext.setChannelType(channelType);
-        channelContext.setSocket(socket);
-        channelContext.setRemoteEndPoint(EndPoint.CLIENT);
-        channelContext.setPublicCertificate(serverPublicCert);
-        channelContext.setSignerCertificate(serverSubSaIssuer);
-        channelContext.setPrivateKey(serverPrivateKey);
+        ChannelContext channelCtx = ChannelContext
+                .builder()
+                .cipherType(cipherType)
+                .channelType(channelType)
+                .socket(socket)
+                .endPoint(EndPoint.CLIENT)
+                .publicCertificate(serverPublicCert)
+                .signerCertificate(serverSubSaIssuer)
+                .privateKey(serverPrivateKey)
+                .build();
 
-        this.channel = ChannelFactory.getChannel(channelContext);
+        this.channel = ChannelFactory.getChannel(channelCtx);
     }
 
     public void run() {

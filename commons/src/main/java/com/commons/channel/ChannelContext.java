@@ -1,6 +1,5 @@
 package com.commons.channel;
 
-
 import com.commons.cryptography.CipherType;
 import com.commons.enums.EndPoint;
 
@@ -8,72 +7,73 @@ import java.net.Socket;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 
-public class ChannelContext {
-    private ChannelType channelType;
-    private CipherType cipherType;
-    private Socket socket;
-    private EndPoint endPoint;
-    private X509Certificate publicCertificate;
-    private X509Certificate signerCertificate;
-    private RSAPrivateKey privateKey;
+public record ChannelContext(
+            ChannelType channelType,
+            CipherType cipherType,
+            Socket socket,
+            EndPoint endPoint,
+            X509Certificate publicCertificate,
+            X509Certificate signerCertificate,
+            RSAPrivateKey privateKey) {
 
-    public boolean isRemoteAServer() {
-        return this.endPoint.equals(EndPoint.SERVER);
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public ChannelType getChannelType() {
-        return channelType;
-    }
+    public static class Builder {
+        private ChannelType channelType;
+        private CipherType cipherType;
+        private Socket socket;
+        private EndPoint endPoint;
+        private X509Certificate publicCertificate;
+        private X509Certificate signerCertificate;
+        private RSAPrivateKey privateKey;
 
-    public void setChannelType(ChannelType channelType) {
-        this.channelType = channelType;
-    }
+        public ChannelContext build() {
+            return new ChannelContext(
+                    this.channelType,
+                    this.cipherType,
+                    this.socket,
+                    this.endPoint,
+                    this.publicCertificate,
+                    this.signerCertificate,
+                    this.privateKey
+            );
+        }
 
-    public CipherType getCipherType() {
-        return cipherType;
-    }
+        public Builder channelType(ChannelType channelType) {
+            this.channelType = channelType;
+            return this;
+        }
 
-    public void setCipherType(CipherType cipherType) {
-        this.cipherType = cipherType;
-    }
+        public Builder cipherType(CipherType cipherType) {
+            this.cipherType = cipherType;
+            return this;
+        }
 
-    public Socket getSocket() {
-        return socket;
-    }
+        public Builder socket(Socket socket) {
+            this.socket = socket;
+            return this;
+        }
 
-    public void setSocket(Socket socket) {
-        this.socket = socket;
-    }
+        public Builder endPoint(EndPoint endPoint) {
+            this.endPoint = endPoint;
+            return this;
+        }
 
-    public EndPoint getRemoteEndPoint() {
-        return endPoint;
-    }
+        public Builder publicCertificate(X509Certificate publicCertificate) {
+            this.publicCertificate = publicCertificate;
+            return this;
+        }
 
-    public void setRemoteEndPoint(EndPoint endPoint) {
-        this.endPoint = endPoint;
-    }
+        public Builder signerCertificate(X509Certificate signerCertificate) {
+            this.signerCertificate = signerCertificate;
+            return this;
+        }
 
-    public X509Certificate getPublicCertificate() {
-        return publicCertificate;
-    }
-
-    public void setPublicCertificate(X509Certificate publicCertificate) {
-        this.publicCertificate = publicCertificate;
-    }
-
-    public X509Certificate getSignerCertificate() {
-        return signerCertificate;
-    }
-
-    public void setSignerCertificate(X509Certificate signerCertificate) {
-        this.signerCertificate = signerCertificate;
-    }
-
-    public RSAPrivateKey getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(RSAPrivateKey privateKey) {
-        this.privateKey = privateKey;
+        public Builder privateKey(RSAPrivateKey privateKey) {
+            this.privateKey = privateKey;
+            return this;
+        }
     }
 }
