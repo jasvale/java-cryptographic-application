@@ -96,32 +96,32 @@ public class GenericCipherTest {
 
     @Test
     public void BlockCipherNoPadding_AES_CBC_Encipher_Then_Decipher() throws Exception {
-        this.assertByCipherType(CipherType.AES_CBC_NoPadding);
+        this.assertByCipherType(GenericCipherType.AES_CBC_NoPadding);
     }
 
     @Test
     public void BlockCipherNoPadding_AES_CFB8_Encipher_Then_Decipher() throws Exception {
-        this.assertByCipherType(CipherType.AES_CFB8_NoPadding);
+        this.assertByCipherType(GenericCipherType.AES_CFB8_NoPadding);
     }
 
     @Test
     public void BlockCipherNoPadding_AES_CFB_Encipher_Then_Decipher() throws Exception {
-        this.assertByCipherType(CipherType.AES_CFB_NoPadding);
+        this.assertByCipherType(GenericCipherType.AES_CFB_NoPadding);
     }
 
     @Test
     public void BlockCipherPKCS5Padding_AES_CBC_Encipher_Then_Decipher() throws Exception {
-        this.assertByCipherType(CipherType.AES_CBC_PKCS5Padding);
+        this.assertByCipherType(GenericCipherType.AES_CBC_PKCS5Padding);
     }
 
     @Test
     public void BlockCipherPKCS5Padding_AES_CFB8_Encipher_Then_Decipher() throws Exception {
-        this.assertByCipherType(CipherType.AES_CFB8_PKCS5Padding);
+        this.assertByCipherType(GenericCipherType.AES_CFB8_PKCS5Padding);
     }
 
-    private void assertByCipherType(CipherType cipherType) throws Exception {
-        GenericCipher genericCipher = GenericCipherFactory.getInstace(
-                cipherType,
+    private void assertByCipherType(GenericCipherType genericCipherType) throws Exception {
+        GenericCipher genericCipher = GenericCipherFactory.getInstance(
+                genericCipherType,
                 Utils.getRandomKey(16),
                 Utils.getRandomKey(16)
         );

@@ -1,6 +1,6 @@
-package com.commons.channel;
+package com.channel;
 
-import com.commons.cryptography.CipherType;
+import com.commons.cryptography.GenericCipherType;
 import com.commons.enums.EndPoint;
 
 import java.net.Socket;
@@ -9,12 +9,16 @@ import java.security.interfaces.RSAPrivateKey;
 
 public record ChannelContext(
             ChannelType channelType,
-            CipherType cipherType,
+            GenericCipherType genericCipherType,
             Socket socket,
             EndPoint endPoint,
             X509Certificate publicCertificate,
             X509Certificate signerCertificate,
             RSAPrivateKey privateKey) {
+
+    public String getRemoteIp() {
+        return socket.getRemoteSocketAddress().toString();
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -22,17 +26,21 @@ public record ChannelContext(
 
     public static class Builder {
         private ChannelType channelType;
-        private CipherType cipherType;
+        private GenericCipherType genericCipherType;
         private Socket socket;
         private EndPoint endPoint;
         private X509Certificate publicCertificate;
         private X509Certificate signerCertificate;
         private RSAPrivateKey privateKey;
 
-        public ChannelContext build() {
+        public ChannelContext build() throws Exception {
+
+            if(socket == null)
+                throw new Exception("Cannot build() ChannelContext, is not valid, socket is null.");
+
             return new ChannelContext(
                     this.channelType,
-                    this.cipherType,
+                    this.genericCipherType,
                     this.socket,
                     this.endPoint,
                     this.publicCertificate,
@@ -46,8 +54,8 @@ public record ChannelContext(
             return this;
         }
 
-        public Builder cipherType(CipherType cipherType) {
-            this.cipherType = cipherType;
+        public Builder cipherType(GenericCipherType genericCipherType) {
+            this.genericCipherType = genericCipherType;
             return this;
         }
 

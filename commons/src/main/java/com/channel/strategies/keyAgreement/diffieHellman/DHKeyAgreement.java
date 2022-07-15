@@ -1,4 +1,4 @@
-package com.commons.diffieHellman;
+package com.channel.strategies.keyAgreement.diffieHellman;
 
 import java.security.*;
 import java.security.cert.X509Certificate;
@@ -7,7 +7,7 @@ import java.security.spec.*;
 
 import javax.crypto.*;
 
-import com.commons.channel.IChannel;
+import com.channel.Channel;
 import com.commons.generics.Triplet;
 import com.commons.utilities.CERTUtils;
 import com.commons.utilities.Console;
@@ -19,7 +19,7 @@ public abstract class DHKeyAgreement {
 	protected KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("DH");
 	protected KeyPair keyPair = null;
 
-	protected IChannel channel;
+	protected Channel channel;
 	protected byte[] publicKey;
 	protected byte[] receivedKey;
 	protected byte[] secretKey = null;

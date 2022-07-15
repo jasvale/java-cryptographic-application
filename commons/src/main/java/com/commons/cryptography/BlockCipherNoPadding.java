@@ -25,6 +25,7 @@ public class BlockCipherNoPadding implements GenericCipher {
         secretKeySpec = new SecretKeySpec(key, algorithm);
         ivSpec = new IvParameterSpec(iv);
     }
+
     @Override
     public byte[] encipher(byte[] bytes) throws InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivSpec);
@@ -51,6 +52,7 @@ public class BlockCipherNoPadding implements GenericCipher {
         }
         return encipheredBytes;
     }
+
     @Override
     public byte[] decipher(byte[] bytes) throws InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivSpec);

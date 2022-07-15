@@ -1,8 +1,6 @@
 package com.responses;
 
-import com.commons.channel.IChannel;
 import com.commons.enums.RequestType;
-import com.commons.utilities.Console;
 import com.server.RequestHandler;
 
 public class RequestFilesResponse extends GenericResponse {

@@ -1,6 +1,6 @@
 package com.commons.cryptography;
 
-public enum CipherType {
+public enum GenericCipherType {
 	RC4,
 	AES_CBC_NoPadding,
 	AES_CBC_PKCS5Padding,

@@ -2,9 +2,9 @@ package com.commons.cryptography;
 
 public class GenericCipherFactory {
 	
-	public static GenericCipher getInstace(CipherType cipherType, byte[] cipherKey, byte[] ivKey) throws Exception
+	public static GenericCipher getInstance(GenericCipherType genericCipherType, byte[] cipherKey, byte[] ivKey) throws Exception
 	{
-		switch (cipherType)
+		switch (genericCipherType)
 		{	
 			case AES_CFB_NoPadding:
 				return new BlockCipherNoPadding("AES/CFB/NoPadding", "AES", cipherKey, ivKey);

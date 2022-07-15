@@ -1,13 +1,16 @@
 package com.requests;
 
-import com.commons.channel.IChannel;
+import com.channel.Channel;
 import com.commons.enums.RequestType;
 
 public class GenericRequest implements Request {
 
-    protected IChannel channel;
+    protected Channel channel;
+    protected String clientInput;
 
-    public GenericRequest(IChannel channel) {
+    public GenericRequest() {}
+
+    public GenericRequest(Channel channel) {
         this.channel = channel;
     }
 
@@ -19,6 +22,11 @@ public class GenericRequest implements Request {
     @Override
     public void send(byte[] bytes) throws Exception {
        channel.send(bytes);
+    }
+
+    @Override
+    public void configureClientInput(String input) {
+        this.clientInput = clientInput;
     }
 
     @Override

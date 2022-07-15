@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.commons.channel.ChannelFactory;
-import com.commons.channel.IChannel;
+import com.channel.ChannelContext;
+import com.channel.Channel;
+import com.channel.ChannelType;
 import com.commons.datastructures.ClientData;
 import com.commons.enums.EndPoint;
 import com.commons.utilities.*;
@@ -51,10 +52,15 @@ public class ClientServer extends Thread {
 	}
 	
 	private class Request extends Thread {
-		private IChannel channel;
+		private Channel channel;
 		
-		public Request(Socket socket) {
-			this.channel = ChannelFactory.getChannel(ChannelFactory.channelType, socket, EndPoint.P2P_CLIENT);
+		public Request(Socket socket) throws Exception {
+			this.channel = Channel.builder().channelContext(
+					ChannelContext.builder()
+							.channelType(ChannelType.UNSECURED)
+							.endPoint(EndPoint.P2P_CLIENT)
+							.build()
+			).build();
 		}
 		
 		public void run() {
@@ -68,7 +74,7 @@ public class ClientServer extends Thread {
 						Console.show("Sending file " + filePath);
 						byte[] file = FileUtils.getFile(filePath);
 						this.channel.send(file);
-						String logText = this.channel.getRemoteIP() + " - File request ID: "+fileID+" location "+filePath;
+						String logText = this.channel.getChannelContext().getRemoteIp() + " - File request ID: "+fileID+" location "+filePath;
 						FileUtils.writeTextToFile(Paths.sharedFiles +clientData.getIdentifier()+"/logs/files_sent", logText);
 					}
 					else {

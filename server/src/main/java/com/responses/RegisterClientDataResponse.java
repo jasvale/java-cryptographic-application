@@ -1,6 +1,5 @@
 package com.responses;
 
-import com.commons.channel.IChannel;
 import com.commons.enums.RequestType;
 import com.server.RequestHandler;
 

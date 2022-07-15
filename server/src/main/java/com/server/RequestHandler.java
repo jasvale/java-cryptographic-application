@@ -1,14 +1,13 @@
 package com.server;
 
 import com.access_control.AccessControl;
-import com.commons.channel.ChannelContext;
-import com.commons.channel.ChannelFactory;
-import com.commons.channel.ChannelType;
-import com.commons.channel.IChannel;
+import com.channel.ChannelContext;
+import com.channel.ChannelType;
+import com.channel.Channel;
 import com.commons.enums.EndPoint;
 import com.commons.enums.RequestType;
 import com.commons.utilities.*;
-import com.commons.cryptography.CipherType;
+import com.commons.cryptography.GenericCipherType;
 import com.commons.datastructures.ClientData;
 import com.responses.Response;
 
@@ -23,12 +22,12 @@ public class RequestHandler extends Thread {
     private final int clientNumber;
     private final ClientManager clientManager;
     private ClientData clientData;
-    private final IChannel channel;
+    private final Channel channel;
 
     public RequestHandler(
             Socket socket,
             int clientNumber,
-            CipherType cipherType,
+            GenericCipherType genericCipherType,
             ChannelType channelType,
             ClientManager clientManager,
             X509Certificate serverSubSaIssuer,
@@ -41,9 +40,8 @@ public class RequestHandler extends Thread {
 
         Console.show("new connection with client# " + clientNumber + " at " + socket);
 
-        ChannelContext channelCtx = ChannelContext
-                .builder()
-                .cipherType(cipherType)
+        ChannelContext channelCtx = ChannelContext.builder()
+                .cipherType(genericCipherType)
                 .channelType(channelType)
                 .socket(socket)
                 .endPoint(EndPoint.CLIENT)
@@ -52,7 +50,7 @@ public class RequestHandler extends Thread {
                 .privateKey(serverPrivateKey)
                 .build();
 
-        this.channel = ChannelFactory.getChannel(channelCtx);
+        this.channel = Channel.builder().channelContext(channelCtx).build();
     }
 
     public void run() {
@@ -61,7 +59,7 @@ public class RequestHandler extends Thread {
 
             this.clientData = clientManager.clientConnected(
                     Response.get(RequestType.REGISTER_CLIENT_DATA, this).receive(),
-                    this.channel.getRemoteIP()
+                    this.channel.getChannelContext().getRemoteIp()
             );
 
             if(!isClientValidatedToAccessServer())
@@ -89,10 +87,8 @@ public class RequestHandler extends Thread {
                     break;
                 }
             }
-            // Clean close, log information
             Console.show("#" + clientNumber + " closed.");
             clientManager.removeClient(this.clientData);
-            // Close socket
             this.channel.close();
         }
         catch (EOFException e) {
@@ -126,7 +122,7 @@ public class RequestHandler extends Thread {
         return this.clientData;
     }
 
-    public IChannel getChannel() {
+    public Channel getChannel() {
         return this.channel;
     }
 

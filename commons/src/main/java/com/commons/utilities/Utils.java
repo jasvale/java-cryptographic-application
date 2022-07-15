@@ -93,4 +93,11 @@ public class Utils
 		Console.show(">	    iv key     : " + Utils.bytesToHex(IVKey));
 		return Triplet.of(macKey, cipherKey, IVKey);
 	}
+
+	public static void validateHash(byte[] localAuthenticationHash, byte[] remoteAuthenticationHash) throws Exception {
+		String localHex = Utils.bytesToHex(localAuthenticationHash);
+		String remoteHex = Utils.bytesToHex(remoteAuthenticationHash);
+		if(!localHex.equals(remoteHex))
+			throw new Exception("This message hash do not macth.");
+	}
 }

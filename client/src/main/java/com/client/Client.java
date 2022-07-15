@@ -7,36 +7,28 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Scanner;
 
-import com.commons.channel.ChannelContext;
+import com.channel.ChannelContext;
+import com.configuration.GlobalConfig;
 import com.requests.Request;
 import com.commons.enums.RequestType;
-import com.commons.channel.ChannelFactory;
-import com.commons.channel.ChannelType;
-import com.commons.channel.IChannel;
+import com.channel.Channel;
 import com.commons.enums.EndPoint;
 import com.commons.datastructures.ClientData;
-import com.commons.cryptography.CipherType;
 import com.commons.utilities.*;
 
 public class Client {
 	public static void main(String[] args) throws Exception {
-		new Client(CipherType.AES_CBC_NoPadding).connect();
+		new Client().connect();
 	}
-	private final ChannelType channelType = ChannelFactory.channelType;
-	private final CipherType cipherType;
-	private IChannel channel;
+
+	private Channel channel;
 	private ClientData clientData;
 	private ClientServer clientServer;
 	private final Scanner scanner = new Scanner(System.in);
 	private String username;
 	private Socket serverSocket;
 
-	public Client(CipherType cipherType) throws Exception {
-		if(Objects.isNull(cipherType))
-			throw new Exception("The cipher type cannot be null!");
-
-		this.cipherType = cipherType;
-
+	public Client() throws Exception {
 		this.askAndReadUsernameFromInput();
 		this.createFoldersStructure();
 		this.loadClientData();
@@ -48,29 +40,33 @@ public class Client {
 			connectToServer();
 
 			Console.show(
-					channel.getRemoteEndPoint(),
-					Request.get(RequestType.HELLO_SERVER, channel).receive()
+					channel.getChannelContext().endPoint(),
+					Request.get(RequestType.HELLO_SERVER, channel, clientData).receive()
 			);
 
-			Request.get(RequestType.REGISTER_CLIENT_DATA, channel).send(clientData.getData());
+			Request.get(RequestType.REGISTER_CLIENT_DATA, channel, clientData).send(clientData.getData());
 
 			while(true) {
 				Console.show(
-						this.channel.getRemoteEndPoint(),
-						Request.get(RequestType.REQUEST_AVAILABLE_OPTIONS, channel).receive()
+						channel.getChannelContext().endPoint(),
+						Request.get(RequestType.REQUEST_AVAILABLE_OPTIONS, channel, clientData).receive()
 				);
 
 				Request request = null;
 				boolean isValid = false;
 				while(!isValid) {
 					Console.input("please select one option");
-					request = Request.get(scanner.nextLine(), channel);
+					String input = scanner.nextLine();
+					request = Request.get(input, channel, clientData);
 					isValid = request != null;
-					if(!isValid)
+					if(!isValid) {
 						Console.show("Invalid command, please enter a valid one or 'exit' to leave.");
+						continue;
+					}
+					request.configureClientInput(input);
 				}
 				request.send();
-				Console.show(this.channel.getRemoteEndPoint(), request.receive());
+				Console.show(channel.getChannelContext().endPoint(), request.receive());
 				if(request.getCommandType().equals(RequestType.BYE_SERVER))
 					break;
 			}
@@ -131,8 +127,8 @@ public class Client {
 
 		ChannelContext channelCtx = ChannelContext
 				.builder()
-				.channelType(channelType)
-				.cipherType(cipherType)
+				.channelType(GlobalConfig.getInstance().getChannelType())
+				.cipherType(GlobalConfig.getInstance().getCipherType())
 				.socket(serverSocket)
 				.endPoint(EndPoint.SERVER)
 				.publicCertificate(CERTUtils.loadPublicX509(Paths.certs +"client.pem"))
@@ -140,6 +136,6 @@ public class Client {
 				.privateKey(CERTUtils.loadRSAPrivateKey(Paths.certs +"client_pK.pkcs8"))
 				.build();
 
-		this.channel = ChannelFactory.getChannel(channelCtx);
+		this.channel = Channel.builder().channelContext(channelCtx).build();
 	}
 }

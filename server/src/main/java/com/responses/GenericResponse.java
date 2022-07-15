@@ -1,14 +1,13 @@
 package com.responses;
 
-import com.commons.channel.IChannel;
+import com.channel.Channel;
 import com.commons.enums.RequestType;
-import com.commons.utilities.Console;
 import com.server.RequestHandler;
 
 public class GenericResponse implements Response {
 
     protected RequestHandler requestHandler;
-    protected IChannel channel;
+    protected Channel channel;
 
     public GenericResponse(RequestHandler requestHandler) {
         this.requestHandler = requestHandler;
