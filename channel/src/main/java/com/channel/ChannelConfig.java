@@ -1,9 +1,8 @@
-package com.configuration;
+package com.channel;
 
-import com.channel.ChannelType;
 import com.commons.cryptography.GenericCipherType;
 
-public class GlobalConfig {
+public class ChannelConfig {
 
     private final ChannelType channelType = ChannelType.SECURED_DIFFIE_HELLMAN;
     private final GenericCipherType genericCipherType = GenericCipherType.AES_CBC_NoPadding;
@@ -16,15 +15,15 @@ public class GlobalConfig {
         return genericCipherType;
     }
 
-    private static volatile GlobalConfig instance = null;
+    private static volatile ChannelConfig instance = null;
 
-    private GlobalConfig() {}
+    private ChannelConfig() {}
 
-    public static GlobalConfig getInstance() {
+    public static ChannelConfig getInstance() {
         if (instance == null) {
-            synchronized(GlobalConfig.class) {
+            synchronized(ChannelConfig.class) {
                 if (instance == null) {
-                    instance = new GlobalConfig();
+                    instance = new ChannelConfig();
                 }
             }
         }

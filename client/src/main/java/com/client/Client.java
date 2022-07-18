@@ -7,8 +7,8 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Scanner;
 
+import com.channel.ChannelConfig;
 import com.channel.ChannelContext;
-import com.configuration.GlobalConfig;
 import com.requests.Request;
 import com.commons.enums.RequestType;
 import com.channel.Channel;
@@ -127,8 +127,8 @@ public class Client {
 
 		ChannelContext channelCtx = ChannelContext
 				.builder()
-				.channelType(GlobalConfig.getInstance().getChannelType())
-				.cipherType(GlobalConfig.getInstance().getCipherType())
+				.channelType(ChannelConfig.getInstance().getChannelType())
+				.cipherType(ChannelConfig.getInstance().getCipherType())
 				.socket(serverSocket)
 				.endPoint(EndPoint.SERVER)
 				.publicCertificate(CERTUtils.loadPublicX509(Paths.certs +"client.pem"))

@@ -9,10 +9,10 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 
+import com.channel.ChannelConfig;
 import com.commons.utilities.CERTUtils;
 import com.commons.utilities.Console;
 import com.commons.utilities.Paths;
-import com.configuration.GlobalConfig;
 
 public class Server {
 
@@ -37,8 +37,8 @@ public class Server {
 					new RequestHandler(
 							socket,
 							clientNumber++,
-							GlobalConfig.getInstance().getCipherType(),
-							GlobalConfig.getInstance().getChannelType(),
+							ChannelConfig.getInstance().getCipherType(),
+							ChannelConfig.getInstance().getChannelType(),
 							clientManager,
 							serverCertIssuer,
 							serverPublicCert,
